@@ -13,17 +13,22 @@ var wInputMsg string = "wrong input pal, try again!"
 func HandleInput(r *bufio.Reader, f func(string, *bufio.Reader)) {
 	input, _ := GetInput("\nalright, hit me with it, paste your json in here: ", r)
 
-	isValidJson(input, r)
-
-	fmt.Println("alright, the json is valid, we are working on it!")
-	f(input, r)
+	if isValidJson(input, r) {
+		fmt.Println("alright, the json is valid, we are working on it!")
+		f(input, r)
+	} else {
+		r.ReadLine()
+		// Start(r)
+	}
 }
 
 // validate the json inside the start context
-func isValidJson(jsonPrompt string, r *bufio.Reader) {
-	if !json.Valid([]byte(jsonPrompt)) {
+func isValidJson(jsonPrompt string, r *bufio.Reader) bool {
+	isValid := !json.Valid([]byte(jsonPrompt))
+	if isValid {
 		fmt.Println("\nwait a second, this is not valid JSON, press 'enter' key to try again")
 	}
+	return isValid
 }
 
 // called when user input is unknown

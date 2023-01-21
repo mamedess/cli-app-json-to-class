@@ -13,10 +13,10 @@ var config string
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
-	start(reader)
+	Start(reader)
 }
 
-func start(r *bufio.Reader) {
+func Start(r *bufio.Reader) {
 	getConfig(r)
 	getLang(r)
 }
@@ -28,12 +28,12 @@ func getConfig(r *bufio.Reader) {
 	switch input {
 	case "f":
 		fmt.Println("\nnot implemented yet...")
-		start(r)
+		Start(r)
 	case "p":
 		config = "p"
 	default:
 		util.WrongInput()
-		start(r)
+		Start(r)
 	}
 }
 
@@ -46,7 +46,7 @@ func getLang(r *bufio.Reader) {
 	case "go":
 		util.HandleInput(r, convert.JsonToGolang)
 	case "c#":
-		util.HandleInput(r, convert.JsonToCSharp)
+		// util.HandleInput(r, convert.JsonToCSharp)
 	default:
 		util.WrongInput()
 		getLang(r)

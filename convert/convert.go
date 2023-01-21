@@ -30,7 +30,7 @@ func JsonToGolang(prompt string, r *bufio.Reader) {
 	}
 }
 
-func JsonToCSharp(prompt string, r *bufio.Reader)
+// func JsonToCSharp(prompt string, r *bufio.Reader)
 
 func getPattern(regex string) *regexp.Regexp {
 	return regexp.MustCompile(regex)
