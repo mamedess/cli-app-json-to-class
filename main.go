@@ -2,8 +2,9 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
+	"main/convert"
+	"main/util"
 	"os"
 )
 
@@ -22,7 +23,7 @@ func start(r *bufio.Reader) {
 
 // get wheather it is prefered to point to a file or to paste the json
 func getConfig(r *bufio.Reader) {
-	input, _ := getInput("\nWhat do you prefer? Pointing to a .txt/.json file or pasting the json here? (f/file, p/pasting) ", r)
+	input, _ := util.GetInput("\nWhat do you prefer? Pointing to a .txt/.json file or pasting the json here? (f/file, p/pasting) ", r)
 
 	switch input {
 	case "f":
@@ -31,33 +32,24 @@ func getConfig(r *bufio.Reader) {
 	case "p":
 		config = "p"
 	default:
-		wrongInput()
+		util.WrongInput()
 		start(r)
 	}
 }
 
 // store wich lang will be used
 func getLang(r *bufio.Reader) {
-	input, _ := getInput("\nWhich lang are we working with?:", r)
+	input, _ := util.GetInput("\nWhich lang are we working with?:", r)
 
 	switch input {
 	case "golang":
 	case "go":
-		handleInput(r, JsonToGolang)
+		util.HandleInput(r, convert.JsonToGolang)
 	case "c#":
-		handleInput(r, JsonToCSharp)
+		util.HandleInput(r, convert.JsonToCSharp)
 	default:
-		wrongInput()
+		util.WrongInput()
 		getLang(r)
 	}
 
-}
-
-// validate the json
-func isValidJson(jsonPrompt string, r *bufio.Reader) {
-	if !json.Valid([]byte(jsonPrompt)) {
-		fmt.Println("\nwait a second, this is not valid JSON, press 'enter' key to try again")
-		r.ReadLine()
-		start(r)
-	}
 }

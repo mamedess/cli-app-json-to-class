@@ -1,17 +1,17 @@
-package main
+package util
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
-	"regexp"
 	"strings"
 )
 
 var wInputMsg string = "wrong input pal, try again!"
 
 // handle golang choice by validating the json and calling the specified converter function if valid
-func handleInput(r *bufio.Reader, f func(string, *bufio.Reader)) {
-	input, _ := getInput("\nalright, hit me with it, paste your json in here: ", r)
+func HandleInput(r *bufio.Reader, f func(string, *bufio.Reader)) {
+	input, _ := GetInput("\nalright, hit me with it, paste your json in here: ", r)
 
 	isValidJson(input, r)
 
@@ -19,19 +19,22 @@ func handleInput(r *bufio.Reader, f func(string, *bufio.Reader)) {
 	f(input, r)
 }
 
+// validate the json inside the start context
+func isValidJson(jsonPrompt string, r *bufio.Reader) {
+	if !json.Valid([]byte(jsonPrompt)) {
+		fmt.Println("\nwait a second, this is not valid JSON, press 'enter' key to try again")
+	}
+}
+
 // called when user input is unknown
-func wrongInput() {
+func WrongInput() {
 	fmt.Println()
 	fmt.Println(wInputMsg)
 }
 
 // get user prompt and returns it as a string, and error if any
-func getInput(prompt string, r *bufio.Reader) (string, error) {
+func GetInput(prompt string, r *bufio.Reader) (string, error) {
 	fmt.Print(prompt)
 	input, err := r.ReadString('\n')
 	return strings.TrimSpace(input), err
-}
-
-func getPattern(regex string) *regexp.Regexp {
-	return regexp.MustCompile(regex)
 }
