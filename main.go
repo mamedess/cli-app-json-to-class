@@ -2,17 +2,12 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 )
 
-func getInput(prompt string, r *bufio.Reader) (string, error) {
-	fmt.Print(prompt)
-	input, err := r.ReadString('\n')
-
-	return strings.TrimSpace(input), err
-}
+var config string
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
@@ -21,33 +16,48 @@ func main() {
 }
 
 func start(r *bufio.Reader) {
-	input, _ := getInput("Which lang are we working with?:", r)
+	getConfig(r)
+	getLang(r)
+}
 
-	// a switch might not be the best way
-	// may change it later
-	// the ideia is to find the easiest way to
-	// predict typos or just diff way of calling the language
-	// have no ideia how to implement today
+// get wheather it is prefered to point to a file or to paste the json
+func getConfig(r *bufio.Reader) {
+	input, _ := getInput("\nWhat do you prefer? Pointing to a .txt/.json file or pasting the json here? (f/file, p/pasting) ", r)
+
 	switch input {
-	case "golang":
-	case "go":
-		JsonToGolang(input)
-	case "c#":
-		fmt.Println("work in progress")
-	case "typescript":
-	case "ts":
-		fmt.Println("work in progress")
+	case "f":
+		fmt.Println("\nnot implemented yet...")
+		start(r)
+	case "p":
+		config = "p"
 	default:
-		fmt.Println("not implemented")
-		getInput("", r)
+		wrongInput()
+		start(r)
 	}
 }
 
-func JsonToGolang(prompt string) string {
-	var gs string = ""
-	//read prompt
+// store wich lang will be used
+func getLang(r *bufio.Reader) {
+	input, _ := getInput("\nWhich lang are we working with?:", r)
 
-	//idk
+	switch input {
+	case "golang":
+	case "go":
+		handleInput(r, JsonToGolang)
+	case "c#":
+		handleInput(r, JsonToCSharp)
+	default:
+		wrongInput()
+		getLang(r)
+	}
 
-	return gs
+}
+
+// validate the json
+func isValidJson(jsonPrompt string, r *bufio.Reader) {
+	if !json.Valid([]byte(jsonPrompt)) {
+		fmt.Println("\nwait a second, this is not valid JSON, press 'enter' key to try again")
+		r.ReadLine()
+		start(r)
+	}
 }
