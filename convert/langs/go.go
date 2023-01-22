@@ -1,5 +1,7 @@
 package langs
 
-func ConvertGolang() {
+import "fmt"
 
+func ConvertGolang() {
+	fmt.Println("hey")
 }

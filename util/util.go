@@ -4,43 +4,17 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
+	"regexp"
 	"strings"
 )
 
 var wInputMsg string = "wrong input pal, try again!"
 var reader = bufio.NewReader(os.Stdin)
-var validTypes = [4]string{"go,golang,c#,csharp"}
 
-// // handle golang choice by validating the json and calling the specified converter function if valid
-
-// func main() {
-// 	file, err := os.Open("file.txt")
-// 	if err != nil {
-// 		fmt.Println("File reading error", err)
-// 		return
-// 	}
-// 	defer file.Close() // it's important to close the file after reading it
-
-//		// create a byte slice to hold the file contents
-//		data := make([]byte, 1024)
-//		for {
-//			n, err := file.Read(data)
-//			if err == io.EOF {
-//				break
-//			}
-//			if err != nil {
-//				fmt.Println("File reading error", err)
-//				return
-//			}
-//			fmt.Println("Read", n, "bytes:", string(data[:n]))
-//		}
-//	}
-//
 // get file from path and return as byte[]
 func GetFileInBytes(path string) ([]byte, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	fmt.Println("Contents of file:", string(data))
 
 	return data, err
@@ -66,4 +40,9 @@ func GetInput(prompt string) (string, error) {
 	fmt.Print(prompt)
 	input, err := reader.ReadString('\n')
 	return strings.TrimSpace(input), err
+}
+
+// get regex for speciied pattern
+func GetPattern(regex string) *regexp.Regexp {
+	return regexp.MustCompile(regex)
 }
