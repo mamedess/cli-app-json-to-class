@@ -21,8 +21,8 @@ func GetFileInBytes(path string) ([]byte, error) {
 }
 
 // validate the json inside the start context
-func IsValidJson(jsonPrompt string) bool {
-	isValid := !json.Valid([]byte(strings.TrimSpace(jsonPrompt)))
+func IsValidJson(strJson string) bool {
+	isValid := !json.Valid([]byte(strings.TrimSpace(strJson)))
 	if isValid {
 		fmt.Println("\nwait a second, this is not valid JSON, press 'enter' key to try again")
 	}

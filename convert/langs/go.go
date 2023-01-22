@@ -3,5 +3,6 @@ package langs
 import "fmt"
 
 func ConvertGolang() {
-	fmt.Println("hey")
+	n := GetPropNames(Str)
+	fmt.Println("keys:", n)
 }

@@ -8,14 +8,22 @@ import (
 	"os"
 )
 
-// variable with all the properties of the json
-var jsonProp = []string{}
 var convertFunctions = map[string]func(){
 	"go":     langs.ConvertGolang,
 	"csharp": langs.ConvertCSharp,
 }
 
 var reader = bufio.NewReader(os.Stdin)
+
+func execute(lang string, strJson string) {
+	if util.IsValidJson(strJson) {
+		fmt.Println("alright, the json is valid, we are working on it!")
+		langs.Str = strJson
+		convertFunctions[strJson]()
+	} else {
+		invalidInput(strJson, HandlePath)
+	}
+}
 
 // handle lang and call respective function
 func HandleJson(lang string) {
@@ -25,12 +33,7 @@ func HandleJson(lang string) {
 		HandleJson(lang)
 	}
 
-	if util.IsValidJson(strJson) {
-		fmt.Println("alright, the json is valid, we are working on it!")
-		convertFunctions[lang]()
-	} else {
-		invalidJson(lang, HandleJson)
-	}
+	execute(lang, strJson)
 }
 
 func HandlePath(lang string) {
@@ -49,30 +52,15 @@ func HandlePath(lang string) {
 		strJson = scanner.Text()
 	}
 
-	if util.IsValidJson(strJson) {
-		fmt.Println("alright, the json is valid, we are working on it!")
-		convertFunctions[lang]()
-	} else {
-		invalidJson(lang, HandlePath)
-	}
+	execute(lang, strJson)
 }
 
-func invalidJson(lang string, f func(string)) {
+func HandleUrl(lang string) {
+	fmt.Printf("hey")
+}
+
+func invalidInput(lang string, f func(string)) {
 	fmt.Println("pretty sure that's not valid json, press 'enter' key and try again!")
 	reader.ReadLine()
 	f(lang)
-}
-
-func getPropNames(prompt string) {
-	//get a slice with the whole property and it's value in the format of a string
-	pattern := util.GetPattern("ck$")
-	m := pattern.Split(prompt, -1)
-
-	//get a slice with the names of the properties
-	pattern = util.GetPattern("ck$")
-	n := pattern.Split(prompt, -1)
-
-	for i := 0; i < len(m); i++ {
-		jsonProp = append(jsonProp, n[i])
-	}
 }
