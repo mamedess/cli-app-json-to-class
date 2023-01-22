@@ -19,7 +19,7 @@ func execute(lang string, strJson string) {
 	if util.IsValidJson(strJson) {
 		fmt.Println("alright, the json is valid, we are working on it!")
 		langs.Str = strJson
-		convertFunctions[strJson]()
+		convertFunctions[lang]()
 	} else {
 		invalidInput(strJson, HandlePath)
 	}
@@ -38,20 +38,13 @@ func HandleJson(lang string) {
 
 func HandlePath(lang string) {
 	path, _ := util.GetInput("\nalright, hit me with it, paste the path here: ")
-	file, err := os.Open(path)
-	strJson := ""
+	file, err := os.ReadFile(path)
 
 	if err != nil {
-		HandlePath(lang)
+		panic("invalid file")
 	}
 
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		strJson = scanner.Text()
-	}
-
+	strJson := string(file)
 	execute(lang, strJson)
 }
 
