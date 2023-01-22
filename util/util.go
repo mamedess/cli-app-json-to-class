@@ -4,27 +4,50 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"strings"
 )
 
 var wInputMsg string = "wrong input pal, try again!"
+var reader = bufio.NewReader(os.Stdin)
 
-// handle golang choice by validating the json and calling the specified converter function if valid
-func HandleInput(r *bufio.Reader, f func(string, *bufio.Reader)) {
-	input, _ := GetInput("\nalright, hit me with it, paste your json in here: ", r)
+// // handle golang choice by validating the json and calling the specified converter function if valid
 
-	if isValidJson(input, r) {
-		fmt.Println("alright, the json is valid, we are working on it!")
-		f(input, r)
-	} else {
-		r.ReadLine()
-		// Start(r)
-	}
+// func main() {
+// 	file, err := os.Open("file.txt")
+// 	if err != nil {
+// 		fmt.Println("File reading error", err)
+// 		return
+// 	}
+// 	defer file.Close() // it's important to close the file after reading it
+
+//		// create a byte slice to hold the file contents
+//		data := make([]byte, 1024)
+//		for {
+//			n, err := file.Read(data)
+//			if err == io.EOF {
+//				break
+//			}
+//			if err != nil {
+//				fmt.Println("File reading error", err)
+//				return
+//			}
+//			fmt.Println("Read", n, "bytes:", string(data[:n]))
+//		}
+//	}
+//
+// get file from path and return as byte[]
+func GetFileInBytes(path string) ([]byte, error) {
+	data, err := ioutil.ReadFile(path)
+	fmt.Println("Contents of file:", string(data))
+
+	return data, err
 }
 
 // validate the json inside the start context
-func isValidJson(jsonPrompt string, r *bufio.Reader) bool {
-	isValid := !json.Valid([]byte(jsonPrompt))
+func IsValidJson(jsonPrompt string) bool {
+	isValid := !json.Valid([]byte(strings.TrimSpace(jsonPrompt)))
 	if isValid {
 		fmt.Println("\nwait a second, this is not valid JSON, press 'enter' key to try again")
 	}
@@ -38,8 +61,8 @@ func WrongInput() {
 }
 
 // get user prompt and returns it as a string, and error if any
-func GetInput(prompt string, r *bufio.Reader) (string, error) {
+func GetInput(prompt string) (string, error) {
 	fmt.Print(prompt)
-	input, err := r.ReadString('\n')
+	input, err := reader.ReadString('\n')
 	return strings.TrimSpace(input), err
 }
