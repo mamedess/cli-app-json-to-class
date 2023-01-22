@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-var validLangs = [4]string{"go", "golang", "c#", "csharp"}
+var validLangs = [2]string{"go", "csharp"}
 var reader = bufio.NewReader(os.Stdin)
 
 func main() {
@@ -16,6 +16,7 @@ func main() {
 }
 
 func start() {
+	tname, _ := util.GetInput("\nFirst of all what is the name of the class you are trying to generate?")
 	lang, _ := util.GetInput("\nWhich lang are we working with? (try your to be precise :D):")
 
 	if !isValidLang(lang, validLangs) {
@@ -28,18 +29,18 @@ func start() {
 
 	switch config {
 	case "p":
-		convert.HandleJson(lang)
+		convert.HandleJson(lang, tname)
 	case "f":
-		convert.HandlePath(lang)
+		convert.HandlePath(lang, tname)
 	case "u":
-		convert.HandleUrl(lang)
+		convert.HandleUrl(lang, tname)
 	default:
 		panic("wrong input")
 
 	}
 }
 
-func isValidLang(str string, arr [4]string) bool {
+func isValidLang(str string, arr [2]string) bool {
 	for i := 0; i < len(arr); i++ {
 		if arr[i] == str {
 			return true

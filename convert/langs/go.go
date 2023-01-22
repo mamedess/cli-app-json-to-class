@@ -1,20 +1,29 @@
 package langs
 
-import "fmt"
+import (
+	"fmt"
+	"main/sb"
+	"os"
+)
 
-func ConvertGolang() {
+func CreateGolang() {
 	n := GetPropNames(Str)
-	uniqueNames := []string{}
-	l := ""
+
+	sb.CreateNew()
+	sb.Appen(fmt.Sprintf("type %v struct {", Name))
 
 	for i := 0; i < len(n); i++ {
-		cprop := n[i]
-		if l != "" && cprop != l {
-			l = cprop
-			uniqueNames = append(uniqueNames, cprop)
-		}
+		c := n[i]
+		sb.Appenl(fmt.Sprintf("%4v %v", c.name, GetValueType(c.value)))
 	}
 
-	fmt.Println("\nfound these:")
-	fmt.Println(uniqueNames)
+	sb.Appenl("}")
+
+	data := []byte(sb.Retrieve())
+	filename := Name + ".go"
+	err := os.WriteFile(filename, data, 0644)
+
+	if err != nil {
+		panic(err)
+	}
 }

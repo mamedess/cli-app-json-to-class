@@ -1,5 +1,5 @@
 package langs
 
-func ConvertCSharp() {
+func CreateCSharp() {
 
 }

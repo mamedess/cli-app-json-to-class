@@ -9,34 +9,35 @@ import (
 )
 
 var convertFunctions = map[string]func(){
-	"go":     langs.ConvertGolang,
-	"csharp": langs.ConvertCSharp,
+	"go":     langs.CreateGolang,
+	"csharp": langs.CreateCSharp,
 }
 
 var reader = bufio.NewReader(os.Stdin)
 
-func execute(lang string, strJson string) {
-	if util.IsValidJson(strJson) {
+func execute(lang string, tname string, strjson string) {
+	if util.IsValidJson(strjson) {
 		fmt.Println("alright, the json is valid, we are working on it!")
-		langs.Str = strJson
+		langs.Str = strjson
+		langs.Name = tname
 		convertFunctions[lang]()
 	} else {
-		invalidInput(strJson, HandlePath)
+		invalidInput(strjson, tname, HandlePath)
 	}
 }
 
 // handle lang and call respective function
-func HandleJson(lang string) {
-	strJson, err := util.GetInput("\nalright, hit me with it, paste the path here: ")
+func HandleJson(lang string, tname string) {
+	strjson, err := util.GetInput("\nalright, hit me with it, paste the json here: ")
 
 	if err != nil {
-		HandleJson(lang)
+		HandleJson(lang, tname)
 	}
 
-	execute(lang, strJson)
+	execute(lang, tname, strjson)
 }
 
-func HandlePath(lang string) {
+func HandlePath(lang string, tname string) {
 	path, _ := util.GetInput("\nalright, hit me with it, paste the path here: ")
 	file, err := os.ReadFile(path)
 
@@ -44,16 +45,16 @@ func HandlePath(lang string) {
 		panic("invalid file")
 	}
 
-	strJson := string(file)
-	execute(lang, strJson)
+	strjson := string(file)
+	execute(lang, tname, strjson)
 }
 
-func HandleUrl(lang string) {
+func HandleUrl(lang string, tname string) {
 	fmt.Printf("hey")
 }
 
-func invalidInput(lang string, f func(string)) {
+func invalidInput(lang string, tname string, f func(string, string)) {
 	fmt.Println("pretty sure that's not valid json, press 'enter' key and try again!")
 	reader.ReadLine()
-	f(lang)
+	f(lang, tname)
 }
