@@ -16,11 +16,11 @@ func main() {
 }
 
 func start() {
-	tname, _ := util.GetInput("\nFirst of all what is the name of the class you are trying to generate?")
-	lang, _ := util.GetInput("\nWhich lang are we working with? (try your to be precise :D):")
+	tname, _ := util.GetInput("\nclass name:")
+	lang, _ := util.GetInput("\nlanguage:")
 
 	if !isValidLang(lang, validLangs) {
-		fmt.Println("\nInvalid input, press 'enter' key to try again:")
+		fmt.Println("\ninvalid input, press 'enter' key to try again:")
 		reader.ReadLine()
 		start()
 	}
@@ -36,7 +36,6 @@ func start() {
 		convert.HandleUrl(lang, tname)
 	default:
 		panic("wrong input")
-
 	}
 }
 

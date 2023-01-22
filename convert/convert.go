@@ -6,6 +6,7 @@ import (
 	"main/convert/langs"
 	"main/util"
 	"os"
+	"strings"
 )
 
 var convertFunctions = map[string]func(){
@@ -17,9 +18,9 @@ var reader = bufio.NewReader(os.Stdin)
 
 func execute(lang string, tname string, strjson string) {
 	if util.IsValidJson(strjson) {
-		fmt.Println("alright, the json is valid, we are working on it!")
+		fmt.Println("\nalright, the json is valid, we are working on it!")
 		langs.Str = strjson
-		langs.Name = tname
+		langs.Name = strings.Trim(tname, " ")
 		convertFunctions[lang]()
 	} else {
 		invalidInput(strjson, tname, HandlePath)

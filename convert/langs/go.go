@@ -21,9 +21,11 @@ func CreateGolang() {
 
 	data := []byte(sb.Retrieve())
 	filename := Name + ".go"
-	err := os.WriteFile(filename, data, 0644)
+	err := os.WriteFile("output/"+filename, data, 0644)
 
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println("\nfile was save as ", Name+".go", "in output folder")
 }
