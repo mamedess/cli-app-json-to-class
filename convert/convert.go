@@ -34,7 +34,7 @@ func HandleJson(lang string) {
 func HandlePath(lang string) {
 	path, _ := util.GetInput("\nalright, hit me with it, paste the path here: ")
 	file, err := os.Open(path)
-
+	strJson := ""
 	if err != nil {
 		HandlePath(lang)
 	}
@@ -43,10 +43,10 @@ func HandlePath(lang string) {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+		strJson = scanner.Text()
 	}
 
-	if util.IsValidJson(path) {
+	if util.IsValidJson(strJson) {
 		fmt.Println("alright, the json is valid, we are working on it!")
 		JsonToGolang(path)
 	} else {
@@ -82,7 +82,13 @@ func JsonToGolang(prompt string) {
 	}
 }
 
-func JsonToCSharp(prompt string)
+func JsonToCSharp(prompt string) {
+	getPropNames(prompt)
+	// sb := CreateBaseJson()
+	for i := 0; i < len(jsonProp); i++ {
+		// appendTo(sb)
+	}
+}
 
 func getPattern(regex string) *regexp.Regexp {
 	return regexp.MustCompile(regex)

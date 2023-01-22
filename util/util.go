@@ -11,6 +11,7 @@ import (
 
 var wInputMsg string = "wrong input pal, try again!"
 var reader = bufio.NewReader(os.Stdin)
+var validTypes = [4]string{"go,golang,c#,csharp"}
 
 // // handle golang choice by validating the json and calling the specified converter function if valid
 
