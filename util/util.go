@@ -22,7 +22,7 @@ func GetFileInBytes(path string) ([]byte, error) {
 
 // validate the json inside the start context
 func IsValidJson(strJson string) bool {
-	isValid := !json.Valid([]byte(strings.TrimSpace(strJson)))
+	isValid := json.Valid([]byte(strings.TrimSpace(strJson)))
 
 	return isValid
 }

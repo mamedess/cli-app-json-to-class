@@ -18,7 +18,6 @@ var reader = bufio.NewReader(os.Stdin)
 
 func execute(lang string, tname string, strjson string) {
 	if util.IsValidJson(strjson) {
-		fmt.Println("\nalright, the json is valid, we are working on it!")
 		langs.Str = strjson
 		langs.Name = strings.Trim(tname, " ")
 		convertFunctions[lang]()
@@ -29,7 +28,7 @@ func execute(lang string, tname string, strjson string) {
 
 // handle lang and call respective function
 func HandleJson(lang string, tname string) {
-	strjson, err := util.GetInput("\nalright, hit me with it, paste the json here: ")
+	strjson, err := util.GetInput("\npaste the json here: ")
 
 	if err != nil {
 		HandleJson(lang, tname)
@@ -39,7 +38,7 @@ func HandleJson(lang string, tname string) {
 }
 
 func HandlePath(lang string, tname string) {
-	path, _ := util.GetInput("\nalright, hit me with it, paste the path here: ")
+	path, _ := util.GetInput("\npaste the path here: ")
 	file, err := os.ReadFile(path)
 
 	if err != nil {
@@ -55,7 +54,7 @@ func HandleUrl(lang string, tname string) {
 }
 
 func invalidInput(lang string, tname string, f func(string, string)) {
-	fmt.Println("pretty sure that's not valid json, press 'enter' key and try again!")
+	fmt.Println("invalid json, press 'enter' key and try again!")
 	reader.ReadLine()
 	f(lang, tname)
 }

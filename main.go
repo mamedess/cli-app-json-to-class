@@ -25,13 +25,13 @@ func start() {
 		start()
 	}
 
-	config, _ := util.GetInput("\nWhat do you prefer? Pointing to a .txt/.json file or pasting the json here? (f/file, p/pasting, u/url) ")
+	config, _ := util.GetInput("\n(p/path, j/json, u/url) ")
 
 	switch config {
 	case "p":
-		convert.HandleJson(lang, tname)
-	case "f":
 		convert.HandlePath(lang, tname)
+	case "j":
+		convert.HandleJson(lang, tname)
 	case "u":
 		convert.HandleUrl(lang, tname)
 	default:
