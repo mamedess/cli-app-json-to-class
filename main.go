@@ -23,19 +23,20 @@ func start() {
 		fmt.Println("\ninvalid input, press 'enter' key to try again:")
 		reader.ReadLine()
 		start()
-	}
+	} else {
 
-	config, _ := util.GetInput("\n(p/path, j/json, u/url) ")
+		config, _ := util.GetInput("\n(p/path, j/json, u/url) ")
 
-	switch config {
-	case "p":
-		convert.HandlePath(lang, tname)
-	case "j":
-		convert.HandleJson(lang, tname)
-	case "u":
-		convert.HandleUrl(lang, tname)
-	default:
-		panic("wrong input")
+		switch config {
+		case "p":
+			convert.HandlePath(lang, tname)
+		case "j":
+			convert.HandleJson(lang, tname)
+		case "u":
+			convert.HandleUrl(lang, tname)
+		default:
+			panic("wrong input")
+		}
 	}
 }
 
