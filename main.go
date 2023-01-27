@@ -24,7 +24,6 @@ func start() {
 		reader.ReadLine()
 		start()
 	} else {
-
 		config, _ := util.GetInput("\n(p/path, j/json, u/url) ")
 
 		switch config {
