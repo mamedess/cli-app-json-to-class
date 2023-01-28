@@ -2,16 +2,11 @@ package langs
 
 import (
 	"fmt"
-	"main/sb"
-	"reflect"
 )
 
 func CreateGolang() {
 	props := decodeJSON([]byte(Str))
 	p := []Prop{}
-
-	sb.CreateNew()
-	sb.Appen(fmt.Sprintf("type %v struct {", Name))
 
 	for k, value := range props {
 		if isUnique(k, p) {
@@ -28,43 +23,40 @@ func CreateGolang() {
 	for i := 0; i < len(p); i++ {
 		c := p[i].value[0]
 
-		rt := reflect.TypeOf(c)
-		switch rt.Kind() {
-		case reflect.Slice:
-			fmt.Println(c, "is a slice")
-		case reflect.Array:
-			fmt.Println(c, "is an array")
-		case reflect.String:
-			fmt.Println(c, "is a string")
-		case reflect.Int:
-			fmt.Println(c, "is a int")
-		case reflect.Float64:
-			fmt.Println(c, "is a float")
-		case reflect.Interface:
-			fmt.Println(c, "is a interface")
-		default:
+		switch t := c.(type) {
+		case map[string]interface{}:
 			{
-				fmt.Println(c, "is something else entirely")
-				slice, ok := c.(map[string]interface{})
+				for kkk, vvv := range t {
+					fmt.Println(kkk, vvv, "INNER")
+				}
+			}
+		case string:
+			fmt.Println(t, "is an string")
+		case []string:
+			fmt.Println(t, "is a string[]")
+		case int64:
+			fmt.Println(t, "is a int")
+		case float64:
+			fmt.Println(t, "is a float")
+		case interface{}:
+			{
+				slice, ok := c.([]interface{})
 				if ok {
 					for kkk, vvv := range slice {
-						fmt.Println(kkk, vvv)
+						tes, okk := vvv.(map[string]interface{})
+						if okk {
+							for kkkk, vvvv := range tes {
+
+								fmt.Println(kkk, vvv, kkkk, vvvv, "INNNNNER")
+							}
+						}
 					}
-				} else {
-					panic("aaaaa")
 				}
+			}
+		default:
+			{
+				panic("aaaaa")
 			}
 		}
 	}
-
-	// fmt.Println(p)
-	// data := []byte(sb.Retrieve())
-	// filename := Name + ".go"
-	// err := os.WriteFile("output/"+filename, data, 0644)
-
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// fmt.Println("\nfile was save as ", Name+".txt", "in output folder")
 }
