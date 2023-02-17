@@ -2,9 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"main/convert"
-	"main/util"
 	"os"
 )
 
@@ -16,35 +14,27 @@ func main() {
 }
 
 func start() {
-	tname, _ := util.GetInput("\nclass name:")
-	lang, _ := util.GetInput("\nlanguage:")
+	convert.HandlePath("go", "class test")
 
-	if !isValidLang(lang, validLangs) {
-		fmt.Println("\ninvalid input, press 'enter' key to try again:")
-		reader.ReadLine()
-		start()
-	} else {
-		config, _ := util.GetInput("\n(p/path, j/json, u/url) ")
+	// tname, _ := util.GetInput("\nclass name:")
+	// lang, _ := util.GetInput("\nlanguage:")
 
-		switch config {
-		case "p":
-			convert.HandlePath(lang, tname)
-		case "j":
-			convert.HandleJson(lang, tname)
-		case "u":
-			convert.HandleUrl(lang, tname)
-		default:
-			panic("wrong input")
-		}
-	}
-}
+	// if !isValidLang(lang, validLangs) {
+	// 	fmt.Println("\ninvalid input, press 'enter' key to try again:")
+	// 	reader.ReadLine()
+	// 	start()
+	// } else {
+	// 	config, _ := util.GetInput("\n(p/path, j/json, u/url) ")
 
-func isValidLang(str string, arr [2]string) bool {
-	for i := 0; i < len(arr); i++ {
-		if arr[i] == str {
-			return true
-		}
-	}
-
-	return false
+	// 	switch config {
+	// 	case "p":
+	// 		convert.HandlePath(lang, tname)
+	// 	case "j":
+	// 		convert.HandleJson(lang, tname)
+	// 	case "u":
+	// 		convert.HandleUrl(lang, tname)
+	// 	default:
+	// 		panic("wrong input")
+	// 	}
+	// }
 }

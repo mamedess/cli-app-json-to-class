@@ -18,13 +18,12 @@ func decodeJSON(data []byte) map[string]interface{} {
 	return jsonData
 }
 
-func isUnique(name string, slice []Prop) bool {
+func isUnique(name string, slice []PropNValue) bool {
 	for i := 0; i < len(slice); i++ {
 		if slice[i].name == name {
 			return false
 		}
 	}
-
 	return true
 }
 
@@ -46,4 +45,30 @@ func GetValueType(v string) string {
 	}
 
 	return "string"
+}
+
+// retorna uma instancia de Prop após asserção de tipos
+func AssertType(currentprop PropNValue) Prop {
+	assertedtype := ""
+
+	switch currentprop.value[0].(type) {
+	case map[string]interface{}:
+		assertedtype = "map[string]interface{}"
+	case string:
+		assertedtype = "string"
+	case []string:
+		assertedtype = "string[]"
+	case int64:
+		assertedtype = "int"
+	case float64:
+		assertedtype = "float64"
+	case interface{}:
+		assertedtype = "interface{}"
+	default:
+		{
+			panic("n consegui :(")
+		}
+	}
+
+	return newProp(currentprop.name, assertedtype)
 }

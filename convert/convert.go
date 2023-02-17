@@ -38,15 +38,19 @@ func HandleJson(lang string, tname string) {
 }
 
 func HandlePath(lang string, tname string) {
-	path, _ := util.GetInput("\npaste the path here: ")
-	file, err := os.ReadFile(path)
-
-	if err != nil {
-		panic("invalid file")
-	}
-
+	file, _ := os.ReadFile("test.txt")
 	strjson := string(file)
 	execute(lang, tname, strjson)
+
+	// path, _ := util.GetInput("\npaste the path here: ")
+	// file, err := os.ReadFile(path)
+
+	// if err != nil {
+	// 	panic("invalid file")
+	// }
+
+	// strjson := string(file)
+	// execute(lang, tname, strjson)
 }
 
 func HandleUrl(lang string, tname string) {
