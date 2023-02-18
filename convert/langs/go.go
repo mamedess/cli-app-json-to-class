@@ -2,6 +2,7 @@ package langs
 
 import "fmt"
 
+// decoda o json e retorna uma string representando um struct golang
 func CreateGolang() {
 	//decoda a string em um map[string]interface{}
 	props := decodeJSON([]byte(Str))
@@ -20,9 +21,10 @@ func CreateGolang() {
 			p = append(p, item)
 		}
 	}
+
 	var pt []Prop
 	for i := 0; i < len(p); i++ {
-		pt = append(pt, AssertType(p[i]))
+		pt = append(pt, GetProp(p[i]))
 	}
 
 	fmt.Println(pt)

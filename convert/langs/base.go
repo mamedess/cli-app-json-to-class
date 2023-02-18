@@ -2,6 +2,7 @@ package langs
 
 import (
 	"encoding/json"
+	"errors"
 	"strconv"
 )
 
@@ -47,8 +48,18 @@ func GetValueType(v string) string {
 	return "string"
 }
 
+func GetProp(currentprop PropNValue) Prop {
+	ptype, err := AssertType(currentprop)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return newProp(currentprop.name, ptype)
+}
+
 // retorna uma instancia de Prop após asserção de tipos
-func AssertType(currentprop PropNValue) Prop {
+func AssertType(currentprop PropNValue) (string, error) {
 	assertedtype := ""
 
 	switch currentprop.value[0].(type) {
@@ -66,9 +77,8 @@ func AssertType(currentprop PropNValue) Prop {
 		assertedtype = "interface{}"
 	default:
 		{
-			panic("n consegui :(")
+			return assertedtype, errors.New("propriedade com tipo desconhecido")
 		}
 	}
-
-	return newProp(currentprop.name, assertedtype)
+	return assertedtype, nil
 }
