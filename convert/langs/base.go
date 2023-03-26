@@ -2,11 +2,10 @@ package langs
 
 import (
 	"encoding/json"
-	"errors"
 	"strconv"
 )
 
-var Str, Name = "", ""
+var Str, ObjectName = "", ""
 
 func decodeJSON(data []byte) map[string]interface{} {
 	var jsonData map[string]interface{}
@@ -19,13 +18,21 @@ func decodeJSON(data []byte) map[string]interface{} {
 	return jsonData
 }
 
-func isUnique(name string, slice []PropNValue) bool {
+func isUniqueIn(slice []Prop, name string, iteration int) bool {
 	for i := 0; i < len(slice); i++ {
-		if slice[i].name == name {
+		if strEquals(slice[i].name, name) && intEquals(slice[i].iteration, iteration) {
 			return false
 		}
 	}
+
 	return true
+}
+
+func strEquals(str1 string, str2 string) bool {
+	return str1 == str2
+}
+func intEquals(int1 int, int2 int) bool {
+	return int1 == int2
 }
 
 func GetValueType(v string) string {
@@ -49,36 +56,7 @@ func GetValueType(v string) string {
 }
 
 func GetProp(currentprop PropNValue) Prop {
-	ptype, err := AssertType(currentprop)
-
-	if err != nil {
-		panic(err)
-	}
+	ptype := RetrieveType(currentprop.value)
 
 	return newProp(currentprop.name, ptype)
-}
-
-// retorna uma instancia de Prop após asserção de tipos
-func AssertType(currentprop PropNValue) (string, error) {
-	assertedtype := ""
-
-	switch currentprop.value[0].(type) {
-	case map[string]interface{}:
-		assertedtype = "map[string]interface{}"
-	case string:
-		assertedtype = "string"
-	case []string:
-		assertedtype = "string[]"
-	case int64:
-		assertedtype = "int"
-	case float64:
-		assertedtype = "float64"
-	case interface{}:
-		assertedtype = "interface{}"
-	default:
-		{
-			return assertedtype, errors.New("propriedade com tipo desconhecido")
-		}
-	}
-	return assertedtype, nil
 }

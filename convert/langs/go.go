@@ -1,31 +1,59 @@
 package langs
 
-import "fmt"
+import (
+	"fmt"
+	"main/sb"
+)
+
+var props = []Prop{}
+var iteration = 0
 
 // decoda o json e retorna uma string representando um struct golang
 func CreateGolang() {
-	//decoda a string em um map[string]interface{}
-	props := decodeJSON([]byte(Str))
-	//p armazena todas os valores unicos deste json, e tambem seus respectivos tipos
-	p := []PropNValue{}
+	propsMap := decodeJSON([]byte(Str))
+	TraverseMap(propsMap)
 
-	//chama a funcao is isUnique em cada item de props e armazena valores unicos em p
-	for k, value := range props {
-		if isUnique(k, p) {
+	sb.CreateNew()
+	declaration := fmt.Sprintf("type %v struct {", ObjectName)
+	sb.Appen(declaration)
+	for _, prop := range props {
+		sb.Appenl(prop.name + "")
+		sb.Appen(prop.proptype)
+	}
+	sb.Appenl("}")
 
-			item := PropNValue{
-				name:  k,
-				value: []interface{}{value},
+	fmt.Print(sb.Retrieve())
+}
+
+func TraverseMap(m map[string]interface{}) {
+	for k, v := range m {
+		if isUniqueIn(props, k, iteration) {
+
+			item := newProp(k, v)
+			if nestedMap, ok := v.(map[string]interface{}); ok {
+				iteration++
+				item.iteration = iteration
+
+				props = append(props, item)
+				TraverseMap(nestedMap)
+				iteration = 0
+			} else if nestedSlice, ok := v.([]interface{}); ok {
+				iteration++
+				item.iteration = iteration
+
+				props = append(props, item)
+				for _, nestedItem := range nestedSlice {
+					if nestedMap, ok := nestedItem.(map[string]interface{}); ok {
+						TraverseMap(nestedMap)
+						iteration = 0
+						break
+					}
+				}
+			} else {
+				item.iteration = iteration
+				props = append(props, item)
 			}
 
-			p = append(p, item)
 		}
 	}
-
-	var pt []Prop
-	for i := 0; i < len(p); i++ {
-		pt = append(pt, GetProp(p[i]))
-	}
-
-	fmt.Println(pt)
 }
