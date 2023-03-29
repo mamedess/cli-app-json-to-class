@@ -1,14 +1,5 @@
 package langs
 
-type PropNValue struct {
-	name         string
-	value        interface{}
-	GetValueType func() string
-	AnyChildren  bool
-	GetChildren  func() map[string]interface{}
-	GetProp      func() Prop
-}
-
 type Prop struct {
 	name        string
 	proptype    string
