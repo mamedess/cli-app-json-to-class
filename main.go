@@ -14,7 +14,7 @@ func main() {
 }
 
 func start() {
-	convert.HandlePath("go", "class test")
+	convert.HandlePath("go", "TESTE")
 
 	// tname, _ := util.GetInput("\nclass name:")
 	// lang, _ := util.GetInput("\nlanguage:")
@@ -32,7 +32,7 @@ func start() {
 	// 	case "j":
 	// 		convert.HandleJson(lang, tname)
 	// 	case "u":
-	// 		convert.HandleUrl(lang, tname)
+	// 		conv5ert.HandleUrl(lang, tname)
 	// 	default:
 	// 		panic("wrong input")
 	// 	}

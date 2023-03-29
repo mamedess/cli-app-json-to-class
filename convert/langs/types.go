@@ -12,31 +12,39 @@ type PropNValue struct {
 type Prop struct {
 	name        string
 	proptype    string
-	iteration   int
+	father      string
 	AnyChildren bool
+	GetChildren func() []Prop
 }
 
-func newProp(name string, item interface{}) Prop {
+func newProp(name string, item interface{}, father string) Prop {
 	return Prop{
 		name:        name,
 		proptype:    RetrieveType(item),
+		father:      father,
 		AnyChildren: strEquals(RetrieveType(item), "map[string]interface{}") || strEquals(RetrieveType(item), "[]interface{}"),
-	}
-}
+		GetChildren: func() []Prop {
+			var children = []Prop{}
+			if nestedMap, ok := item.(map[string]interface{}); ok {
+				for k, v := range nestedMap {
+					if isUniqueIn(children, k, name) {
+						children = append(children, newProp(k, v, name))
+					}
+				}
+			}
 
-func newPropNValue(name string, item interface{}) PropNValue {
-	return PropNValue{
-		name:  name,
-		value: item,
-		GetValueType: func() string {
-			return RetrieveType(item)
-		},
-		GetProp: func() Prop {
-			return newProp(name, RetrieveType(item))
-		},
-		AnyChildren: strEquals(RetrieveType(item), "map[string]interface{}") || strEquals(RetrieveType(item), "[]interface{}"),
-		GetChildren: func() map[string]interface{} {
-			return item.(map[string]interface{})
+			if nestedSlice, ok := item.([]interface{}); ok {
+				for _, prop := range nestedSlice {
+					if nested, ok := prop.(map[string]interface{}); ok {
+						for k, v := range nested {
+							if isUniqueIn(children, k, name) {
+								children = append(children, newProp(k, v, name))
+							}
+						}
+					}
+				}
+			}
+			return children
 		},
 	}
 }

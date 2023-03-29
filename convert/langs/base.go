@@ -18,9 +18,13 @@ func decodeJSON(data []byte) map[string]interface{} {
 	return jsonData
 }
 
-func isUniqueIn(slice []Prop, name string, iteration int) bool {
+func Marshal(jsonData map[string]interface{}) {
+	panic("unimplemented")
+}
+
+func isUniqueIn(slice []Prop, name string, father string) bool {
 	for i := 0; i < len(slice); i++ {
-		if strEquals(slice[i].name, name) && intEquals(slice[i].iteration, iteration) {
+		if strEquals(slice[i].name, name) && strEquals(father, slice[i].father) {
 			return false
 		}
 	}
@@ -31,11 +35,8 @@ func isUniqueIn(slice []Prop, name string, iteration int) bool {
 func strEquals(str1 string, str2 string) bool {
 	return str1 == str2
 }
-func intEquals(int1 int, int2 int) bool {
-	return int1 == int2
-}
 
-func GetValueType(v string) string {
+func GetType(v string) string {
 	_, err := strconv.ParseInt(v, 10, 64)
 
 	if err == nil {
@@ -53,10 +54,4 @@ func GetValueType(v string) string {
 	}
 
 	return "string"
-}
-
-func GetProp(currentprop PropNValue) Prop {
-	ptype := RetrieveType(currentprop.value)
-
-	return newProp(currentprop.name, ptype)
 }
