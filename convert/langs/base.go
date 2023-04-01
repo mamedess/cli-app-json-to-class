@@ -24,7 +24,7 @@ func Marshal(jsonData map[string]interface{}) {
 
 func isUniqueIn(slice []Prop, name string, father string) bool {
 	for i := 0; i < len(slice); i++ {
-		if strEquals(slice[i].name, name) && strEquals(father, slice[i].father) {
+		if strEquals(slice[i].name, name) && father != "" && strEquals(father, slice[i].father) {
 			return false
 		}
 	}

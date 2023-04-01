@@ -6,7 +6,6 @@ import (
 )
 
 var props = []Prop{}
-var secondaryProps = []Prop{}
 
 // decoda o json e retorna uma string representando um struct golang
 func CreateGolang() {
@@ -44,33 +43,49 @@ func TraverseMap(m map[string]interface{}, father string) {
 }
 
 func BuildString() {
+
+	fmt.Println(GenerateStruct(props, false))
+
+	for _, prop := range props {
+		if prop.AnyChildren {
+			fmt.Println(GenerateStruct(prop.GetChildren(), true))
+		}
+	}
+}
+
+func GenerateStruct(item []Prop, children bool) string {
+	if len(item) == 0 {
+		return ""
+	}
+
 	sb.CreateNew()
-	declaration := fmt.Sprintf("type %v struct {", ObjectName)
+
+	structName := ObjectName
+
+	if children && len(item) > 0 {
+		structName = item[0].father
+	}
+
+	declaration := fmt.Sprintf("type %v struct {", structName)
 	sb.Appen(declaration)
 
 	maxLen := 0
 
-	for _, prop := range props {
+	for _, prop := range item {
 		if len(prop.name) > maxLen {
 			maxLen = len(prop.name)
 		}
 	}
 
-	for _, prop := range props {
-		if prop.father == "" {
+	for _, prop := range item {
+		if prop.father == "" || children {
 			nameWithPadding := fmt.Sprintf("%-"+fmt.Sprintf("%v", maxLen+1)+"s", prop.name)
 			sb.Appenl(nameWithPadding)
 			sb.Appen(prop.proptype)
-		} else {
-			if isUniqueIn(secondaryProps, prop.father, "") && prop.proptype == "[]interface{}" || prop.proptype == "map[string]interface{}" {
-				secondaryProps = append(secondaryProps, prop.GetChildren()...)
-			}
 		}
 	}
 
 	sb.Appenl("}")
 
-	fmt.Print(sb.Retrieve())
-	var t = secondaryProps
-	fmt.Print(t)
+	return sb.Retrieve()
 }
