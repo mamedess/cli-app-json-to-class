@@ -8,7 +8,6 @@ import (
 	"os"
 )
 
-// var validLangs = [2]string{"go", "csharp"}
 var reader = bufio.NewReader(os.Stdin)
 
 func main() {

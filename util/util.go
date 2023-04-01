@@ -40,7 +40,7 @@ func GetInput(prompt string) (string, error) {
 	return strings.TrimSpace(input), err
 }
 
-// get regex for speciied pattern
+// get regex for specified pattern
 func GetPattern(regex string) *regexp.Regexp {
 	return regexp.MustCompile(regex)
 }

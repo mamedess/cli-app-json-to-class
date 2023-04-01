@@ -3,89 +3,93 @@ package langs
 import (
 	"fmt"
 	"main/sb"
+	"time"
 )
 
-var props = []Prop{}
+var props = make([]map[string]interface{}, 1)
 
-// decoda o json e retorna uma string representando um struct golang
+// Decodes the json into a map[string]interface{} and
+// traverse its map generatin a []map[string]interface{}.
+// Each position of the array corresponds to a struct to be created.
+// Finally prints a Golang struct in the prompt.
 func CreateGolang() {
 	propsMap := decodeJSON([]byte(Str))
 
-	TraverseMap(propsMap, "")
-	BuildString()
+	start := time.Now()
+
+	props = make([]map[string]interface{}, 1)
+	props[0] = make(map[string]interface{})
+	TraverseMap(propsMap, 0, "", nil)
+	GenerateStruct(props)
+
+	elapsed := time.Since(start)
+	fmt.Printf("it took %s", elapsed)
 }
 
-func TraverseMap(m map[string]interface{}, father string) {
+// Traverse a map[string]interface{} using recursion.
+func TraverseMap(m map[string]interface{}, iteration int, kf string, vf interface{}) {
 	for k, v := range m {
-		if isUniqueIn(props, k, k) {
+		if isUniqueInMap(props, k, v) {
 
-			item := newProp(k, v, "")
+			if kf != "" && vf != nil {
+				props = append(props, make(map[string]interface{}))
+				iteration = len(props) - 1
+				props[iteration][kf] = vf
+			}
+
 			if nestedMap, ok := v.(map[string]interface{}); ok {
-				item.father = father
-				props = append(props, item)
-				TraverseMap(nestedMap, k)
+				props[iteration][k] = v
+				TraverseMap(nestedMap, iteration, k, v)
 			} else if nestedSlice, ok := v.([]interface{}); ok {
-				item.father = father
-				props = append(props, item)
+				props[iteration][k] = v
 				for _, nestedItem := range nestedSlice {
 					if nestedMap, ok := nestedItem.(map[string]interface{}); ok {
-						TraverseMap(nestedMap, k)
+						TraverseMap(nestedMap, iteration, k, v)
 						break
 					}
 				}
 			} else {
-				item.father = father
-				props = append(props, item)
+				props[iteration][k] = v
+
+				if kf != "" && vf != nil {
+					kf = ""
+					vf = nil
+				}
 			}
 
 		}
 	}
 }
 
-func BuildString() {
-
-	fmt.Println(GenerateStruct(props, false))
-
-	for _, prop := range props {
-		if prop.AnyChildren {
-			fmt.Println(GenerateStruct(prop.GetChildren(), true))
-		}
-	}
-}
-
-func GenerateStruct(item []Prop, children bool) string {
-	if len(item) == 0 {
-		return ""
-	}
-
+// Generate a struct for each item of the array and print it to the prompt.
+func GenerateStruct(items []map[string]interface{}) {
 	sb.CreateNew()
 
-	structName := ObjectName
+	for _, item := range items {
 
-	if children && len(item) > 0 {
-		structName = item[0].father
-	}
+		structName := "teste"
 
-	declaration := fmt.Sprintf("type %v struct {", structName)
-	sb.Appen(declaration)
+		declaration := fmt.Sprintf("type %v struct {", structName)
+		sb.Appen(declaration)
 
-	maxLen := 0
+		maxLen := 0
 
-	for _, prop := range item {
-		if len(prop.name) > maxLen {
-			maxLen = len(prop.name)
+		for k := range item {
+			if len(k) > maxLen {
+				maxLen = len(k)
+			}
 		}
-	}
 
-	for _, prop := range item {
-		if prop.father == "" || children {
-			nameWithPadding := fmt.Sprintf("%-"+fmt.Sprintf("%v", maxLen+1)+"s", prop.name)
+		for k, prop := range item {
+			nameWithPadding := fmt.Sprintf("%-"+fmt.Sprintf("%v", maxLen+1)+"s", k)
 			sb.Appenl(nameWithPadding)
-			sb.Appen(prop.proptype)
+			sb.Appen(RetrieveType(prop))
 		}
+
+		sb.Appenl("}")
+		sb.Appenl("")
+
 	}
 
-	sb.Appenl("}")
-
-	return sb.Retrieve()
+	fmt.Print(sb.Retrieve())
 }
