@@ -26,29 +26,13 @@ func execute(lang string, tname string, strjson string) {
 	}
 }
 
-// handle lang and call respective function
-func HandleJson(lang string, tname string) {
-	strjson, err := util.GetInput("\npaste the json here: ")
-
-	if err != nil {
-		HandleJson(lang, tname)
-	}
-
-	execute(lang, tname, strjson)
-}
-
 func HandlePath(lang string, tname string) {
-	file, err := os.ReadFile("test.txt")
+	path, _ := util.GetInput("\npaste the path here: ")
+	file, err := os.ReadFile(path)
 
 	if err != nil {
 		panic("invalid file")
 	}
-	// path, _ := util.GetInput("\npaste the path here: ")
-	// file, err := os.ReadFile(path)
-
-	// if err != nil {
-	// 	panic("invalid file")
-	// }
 
 	strjson := string(file)
 	execute(lang, tname, strjson)

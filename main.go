@@ -12,7 +12,7 @@ import (
 var reader = bufio.NewReader(os.Stdin)
 
 func main() {
-	convert.HandlePath("go", "TESTE")
+	start()
 }
 
 func start() {
@@ -25,13 +25,11 @@ func start() {
 		reader.ReadLine()
 		start()
 	} else {
-		config, _ := util.GetInput("\n(p/path, j/json, u/url) ")
+		config, _ := util.GetInput("\n(p/path, u/url) ")
 
 		switch config {
 		case "p":
 			convert.HandlePath(lang, tname)
-		case "j":
-			convert.HandleJson(lang, tname)
 		case "u":
 			convert.HandleUrl(lang, tname)
 		default:
