@@ -7,8 +7,8 @@ import (
 var Str, ObjectName = "", ""
 
 // Decode the json to a map of strings and its values as interface
-func decodeJSON(data []byte) map[string]interface{} {
-	var jsonData map[string]interface{}
+func decodeJSON(data []byte) []map[string]interface{} {
+	var jsonData []map[string]interface{}
 	err := json.Unmarshal(data, &jsonData)
 
 	if err != nil {

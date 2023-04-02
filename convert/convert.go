@@ -3,10 +3,13 @@ package convert
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"main/convert/langs"
 	"main/util"
+	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 // Define a map of functions used for the parsing
@@ -58,8 +61,46 @@ func HandlePathDebug() {
 	execute("go", "test.txt", strjson)
 }
 
+func HandleUrlDebug() {
+	url := "https://jsonplaceholder.typicode.com/users"
+
+	spaceClient := http.Client{
+		Timeout: time.Second * 2,
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, url, nil)
+
+	res, _ := spaceClient.Do(req)
+
+	if res.Body != nil {
+		defer res.Body.Close()
+	}
+
+	body, _ := ioutil.ReadAll(res.Body)
+
+	strjson := string(body)
+	execute("go", "teste", strjson)
+}
+
 func HandleUrl(lang string, tname string) {
-	fmt.Printf("hey")
+	url, _ := util.GetInput("\npaste the url here: ")
+
+	spaceClient := http.Client{
+		Timeout: time.Second * 2,
+	}
+
+	req, _ := http.NewRequest(http.MethodGet, url, nil)
+
+	res, _ := spaceClient.Do(req)
+
+	if res.Body != nil {
+		defer res.Body.Close()
+	}
+
+	body, _ := ioutil.ReadAll(res.Body)
+
+	strjson := string(body)
+	execute(lang, tname, strjson)
 }
 
 func invalidInput(lang string, tname string, callback func(string, string)) {
