@@ -3,6 +3,7 @@ package langs
 import (
 	"fmt"
 	"main/sb"
+	"strings"
 	"time"
 )
 
@@ -13,14 +14,18 @@ var props = make([]map[string]interface{}, 1)
 // Each position of the array corresponds to a struct to be created.
 // Finally prints a Golang struct in the prompt.
 func CreateGolang() {
+	if !strings.HasPrefix(Str, "[") && !strings.HasSuffix(Str, "]") {
+		Str = "[" + Str[:1] + Str[1:] + "]"
+	}
+
 	propsMap := decodeJSON([]byte(Str))
 
 	start := time.Now()
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < 1; i++ {
 
 		props = make([]map[string]interface{}, 1)
 		props[0] = make(map[string]interface{})
-		TraverseMap(propsMap, 0, "", nil)
+		TraverseMap(propsMap[0], 0, "", nil)
 		GenerateStruct(props)
 	}
 
