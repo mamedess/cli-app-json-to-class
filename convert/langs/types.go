@@ -1,5 +1,6 @@
 package langs
 
+// Gets the type and return as string
 func RetrieveType(value interface{}) string {
 	assertedtype := ""
 

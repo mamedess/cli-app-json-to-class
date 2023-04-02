@@ -8,9 +8,12 @@ import (
 	"os"
 )
 
+// var 5validLangs = [2]string{"go", "csharp"}
 var reader = bufio.NewReader(os.Stdin)
 
 func main() {
+	// convert.HandlePathDebug()
+
 	start()
 }
 
@@ -35,4 +38,5 @@ func start() {
 			panic("wrong input")
 		}
 	}
+	start()
 }

@@ -14,6 +14,10 @@ func Appenl(nstr string) {
 	ostr += "\n" + nstr
 }
 
+func AppenEmptyl() {
+	ostr += "\n"
+}
+
 func Retrieve() string {
 	return ostr
 }

@@ -16,11 +16,13 @@ func CreateGolang() {
 	propsMap := decodeJSON([]byte(Str))
 
 	start := time.Now()
+	for i := 0; i < 100000; i++ {
 
-	props = make([]map[string]interface{}, 1)
-	props[0] = make(map[string]interface{})
-	TraverseMap(propsMap, 0, "", nil)
-	GenerateStruct(props)
+		props = make([]map[string]interface{}, 1)
+		props[0] = make(map[string]interface{})
+		TraverseMap(propsMap, 0, "", nil)
+		GenerateStruct(props)
+	}
 
 	elapsed := time.Since(start)
 	fmt.Printf("it took %s", elapsed)
@@ -51,10 +53,8 @@ func TraverseMap(m map[string]interface{}, iteration int, kf string, vf interfac
 			} else {
 				props[iteration][k] = v
 
-				if kf != "" && vf != nil {
-					kf = ""
-					vf = nil
-				}
+				kf = ""
+				vf = nil
 			}
 
 		}
@@ -63,33 +63,61 @@ func TraverseMap(m map[string]interface{}, iteration int, kf string, vf interfac
 
 // Generate a struct for each item of the array and print it to the prompt.
 func GenerateStruct(items []map[string]interface{}) {
+	iteration := 0
 	sb.CreateNew()
 
 	for _, item := range items {
-
-		structName := "teste"
-
-		declaration := fmt.Sprintf("type %v struct {", structName)
-		sb.Appen(declaration)
-
 		maxLen := 0
 
 		for k := range item {
-			if len(k) > maxLen {
-				maxLen = len(k)
+			kLen := len(k)
+			if kLen > maxLen {
+				maxLen = kLen
 			}
 		}
+
+		structName := ObjectName
+
+		if iteration > 0 {
+			for k, prop := range item {
+				typp := RetrieveType(prop)
+
+				if validType(typp) {
+					structName = k
+					delete(item, k)
+					break
+				}
+
+			}
+		}
+
+		sb.AppenEmptyl()
+
+		declaration := fmt.Sprintf("type %v struct {", structName)
+		sb.Appen(declaration)
 
 		for k, prop := range item {
 			nameWithPadding := fmt.Sprintf("%-"+fmt.Sprintf("%v", maxLen+1)+"s", k)
 			sb.Appenl(nameWithPadding)
 			sb.Appen(RetrieveType(prop))
+
 		}
-
+		iteration++
 		sb.Appenl("}")
-		sb.Appenl("")
-
+		sb.AppenEmptyl()
 	}
 
 	fmt.Print(sb.Retrieve())
+}
+
+// Checks if type is a map of strings or slice interface
+func validType(str string) bool {
+
+	for _, s := range [2]string{"map[string]interface{}", "[]interface{}"} {
+		if s == str {
+			return true
+		}
+	}
+
+	return false
 }

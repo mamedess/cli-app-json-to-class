@@ -41,10 +41,6 @@ func HandleJson(lang string, tname string) {
 
 // Try to open the file and execute the parsing JSON to struct
 func HandlePath(lang string, tname string) {
-	// file, _ := os.ReadFile("test.txt")
-	// strjson := string(file)
-	// execute(lang, tname, strjson)
-
 	path, _ := util.GetInput("\npaste the path here: ")
 	file, err := os.ReadFile(path)
 
@@ -54,6 +50,12 @@ func HandlePath(lang string, tname string) {
 
 	strjson := string(file)
 	execute(lang, tname, strjson)
+}
+
+func HandlePathDebug() {
+	file, _ := os.ReadFile("test.txt")
+	strjson := string(file)
+	execute("go", "test.txt", strjson)
 }
 
 func HandleUrl(lang string, tname string) {
